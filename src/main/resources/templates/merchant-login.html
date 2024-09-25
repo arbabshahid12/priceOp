@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Merchant Login</title>
+</head>
+<body>
+<h2>Merchant Login</h2>
+<!--<a th:href="@{/merchant/register}">Register here</a>-->
+
+
+<form th:action="@{/merchant/login}" th:object="${merchant}" method="post">
+    <div>
+        <label for="email">Email</label>
+        <input type="email" th:field="*{email}" id="email" placeholder="Enter your email"/>
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <input type="password" th:field="*{password}" id="password" placeholder="Enter your password"/>
+    </div>
+
+    <div>
+        <input type="submit" value="Login"/>
+    </div>
+</form>
+
+<div th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+
+<div>
+    <p>New here? <a th:href="@{/merchant/register}">Register here</a></p>
+</div>
+</body>
+</html>
