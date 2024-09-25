@@ -1,70 +1,65 @@
 package com.priceComparison.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.Collections;
+
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
-
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .anonymous(anonymous -> anonymous.disable()).csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/**").hasRole("ADMIN")
-//                        .requestMatchers("/api/**").permitAll()
-                       .requestMatchers("/api/merchant/register").permitAll()
-                        .requestMatchers("api/merchant/login").permitAll()
-                        .requestMatchers("api/price-history/**").permitAll()
-                        .requestMatchers("/api/products/**").hasRole("MERCHANT")
-                        .requestMatchers("/error").permitAll()
-
-                        .anyRequest().authenticated());
-        return http.build();
-    }
-
-    @Bean
-    public UserDetailsService getUserDetailService(){
+    public UserDetailsService userDetailsService() {
         return new CustomUserDetailsService();
-
     }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
+    }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(this.customUserDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/").hasAnyAuthority( "MERCHANT", "ADMIN")
+                                .requestMatchers("/new").hasAnyAuthority("ADMIN", "MERCHANT")
+                                .requestMatchers("/update/").hasAnyAuthority("ADMIN", "MERCHANT")
+                                .requestMatchers("/delete/").hasAuthority("ADMIN")
+                                .anyRequest().authenticated()
+                )
+                .formLogin(formLogin -> formLogin.permitAll())
+                .logout(logout -> logout.permitAll())
+                .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/403"));
+
+        return http.build();
     }
 
-//    @Autowired
-//    public void configure(AuthenticationManagerBuilder auth) throws Exception{
-//        auth.authenticationProvider(authenticationProvider());
-//    }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
 }

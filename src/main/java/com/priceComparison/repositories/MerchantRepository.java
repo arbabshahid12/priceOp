@@ -9,8 +9,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MerchantRepository extends JpaRepository<Merchant, Long> {
 
-    Merchant findByEmail(String email);
+//    Merchant findByEmail(String email);
 
-    @Query("select m from Merchant m where m.email =:email")
-    Merchant getUserByUserName(@Param("email") String email);
+    @Query("select m from Merchant m where m.userName =:username")
+    Merchant getByUserName(@Param("username") String username);
+
+    Merchant findByEmail(String email);
 }

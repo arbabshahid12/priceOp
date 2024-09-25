@@ -27,14 +27,14 @@ public class MerchantService {
         if(emialExit==null) {
             merchant.setPassword(passwordEncoder.encode(merchant.getPassword()));
             merchant.setEmail(merchant.getEmail());
-            merchant.setRole(merchant.getRole());
+            merchant.setRoles(merchant.getRoles());
             merchant = merchantRepository.save(merchant);
-            merchant.setMessage("Create Account Successfully");
-            merchant.setCode("200");
+//            merchant.setMessage("Create Account Successfully");
+//            merchant.setCode("200");
             return merchant;
         }
-        merchant.setMessage("Email already exist");
-        merchant.setCode("01");
+//        merchant.setMessage("Email already exist");
+//        merchant.setCode("01");
         return merchant;
     }
 

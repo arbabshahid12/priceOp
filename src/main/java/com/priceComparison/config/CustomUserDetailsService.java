@@ -20,30 +20,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Merchant merchant = merchantRepository.getUserByUserName(email);
+        Merchant merchant = merchantRepository.getByUserName(email);
 
-        if (merchant==null){
+        if (merchant == null) {
             throw new UsernameNotFoundException("Could not find user");
         }
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + merchant.getRole()));
-
-        return new org.springframework.security.core.userdetails.User(
-                merchant.getEmail(),
-                merchant.getPassword(),
-                authorities
-        );
-
-
-
-//        GrantedAuthority authority = new SimpleGrantedAuthority(merchant.getRole());
-////
-//        return new org.springframework.security.core.userdetails.User(merchant.getEmail(), merchant.getPassword()
-//                , AuthorityUtils.createAuthorityList(merchant.getRole()));
-
-//        return new org.springframework.security.core.userdetails.User(
-//                merchant.getEmail(),
-//                merchant.getPassword(),
-//                Collections.singletonList(authority)  // Return role as authority
-//        );
+        return new CustomUserDetail(merchant);
     }
 }

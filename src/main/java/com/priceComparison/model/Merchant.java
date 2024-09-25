@@ -2,15 +2,19 @@ package com.priceComparison.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.management.relation.Role;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+
 
 @Entity
 @Table(name = "merchants")
+@Getter
+@Setter
 public class Merchant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,8 +22,16 @@ public class Merchant {
     private String userName;
     private String email;
     private String password;
-    private Set<Role> role;
-    private String message;
-    private String code;
+
+
+    //
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "merchant_role",
+            joinColumns = @JoinColumn(name = "merchant_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
 
 }
