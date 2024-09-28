@@ -1,0 +1,69 @@
+
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        .subcategory-list {
+            display: none; /* Hide subcategories by default */
+            padding-left: 0px; /* Add some indentation for subcategories */
+        }
+        .expand-icon {
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 8px; /* Space between icon and text */
+            vertical-align: middle; /* Align icon with text */
+            display: inline-block; /* Ensure the icon is inline with text */
+        }
+        .category-item {
+            display: flex;
+            align-items: center; /* Align items vertically center */
+            margin-bottom: 5px; /* Space between list items */
+        }
+    </style>
+
+</head>
+<body>
+
+
+
+
+<div th:fragment="categoryList(categories, level, selectedCategoryId)">
+    <ul>
+        <!-- Iterate over the categories -->
+        <li th:each="category : ${categories}" class="category-item small-text">
+            <!-- Conditionally display the expand icon only if there are subcategories -->
+            <span class="expand-icon"
+                  th:if="${category.subcategories != null && !category.subcategories.isEmpty()}"
+                  th:text="${category.id == selectedCategoryId ? '−' : '+'}"
+                  onclick="toggleSubcategories(event)">
+            </span>
+
+            <!-- Output the category.id and selectedCategoryId for debugging -->
+            <!--            <p>Category ID: <span th:text="${category.id}"></span></p>-->
+            <!--            <p>Selected Category ID: <span th:text="${selectedCategoryId}"></span></p>-->
+
+            <!-- Highlight the selected category by comparing IDs -->
+            <a th:href="@{/category/{id}(id=${category.id})}"
+               th:text="${category.name}"
+               th:classappend="${category.id == selectedCategoryId} ? 'selected-cat' : ''">
+                <!-- Apply CSS class if the category is selected -->
+            </a>
+            <!--            <p th:text="${category.subcategories}"></p>-->
+            <!--            <p th:text="${selectedCategoryId}"></p>-->
+
+            <!-- Check if there are subcategories -->
+            <div th:if="${category.subcategories != null && !category.subcategories.isEmpty()}"
+                 th:classappend="${category.id == selectedCategoryId} ? 'display: block;' : ''"
+                 class="subcategory-list">
+                <!-- Recursive call to display subcategories with appropriate indentation -->
+                <div th:replace="~{category-fragment :: categoryList(categories=${category.subcategories}, level=${level + 1}, selectedCategoryId=${selectedCategoryId})}">
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

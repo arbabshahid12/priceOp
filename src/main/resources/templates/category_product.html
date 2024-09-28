@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Priceop</title>
+    <link rel="stylesheet" href="/fonts/font.css" />
+    <link
+            href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+            crossorigin="anonymous"
+    />
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+<body>
+
+<header class="header-sec">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="d-flex w-100 justify-content-between">
+                <a class="navbar-brand" href="#">
+                    <img src="/images/logo.svg" alt="Logo" />
+                </a>
+                <div class="d-flex d-lg-none">
+                    <ul class="navbar-nav flex-row">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="#">
+                                <i class="fa-regular fa-heart"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item login-btn me-2">
+                            <a class="nav-link" aria-current="page" href="/">
+                                <i class="fa-solid fa-arrow-right-to-bracket"></i> Log In
+                            </a>
+                        </li>
+                    </ul>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav m-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/expert-reviews">Expert reviews</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/sale">Sale</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/guides">Guides</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="how-to-use">How to use</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/about-us">About us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/merchant_section">Merchant Section</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav me-0 mb-2 mb-lg-0 ms-auto d-none d-lg-flex">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="wishlist">
+                                <i class="fa-regular fa-heart"></i> Wishlist
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="cart">
+                                <i class="fa-solid fa-cart-shopping"></i> Cart
+                            </a>
+                        </li>
+                        <li class="nav-item login-btn">
+                            <a class="nav-link" aria-current="page" href="/loginSignup">
+                                <i class="fa-solid fa-arrow-right-to-bracket"></i> Log In
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<div class="banner-sec">
+    <div class="container">
+        <div class="bannerTxt">
+            <h1>Compare, Find Products with Priceop</h1>
+            <form class="bnr-srch" action="/search" method="get">
+                <input type="search" placeholder="Search by Product Name" name="query" th:value="${query}"/>
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<body>
+
+<section class="prod-sec">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="site-heading" th:text="'Top Products in ' + ${category.name}"></h2>
+        </div>
+        <div class="slick-slider">
+            <div th:each="product : ${products}" class="prod-box">
+                <div class="prod-img">
+                    <div class="img-holder">
+                        <img th:src="@{${product.productThumbUrl}}" alt="" />
+                    </div>
+                    <a href="" class="like-btn">
+                        <img src="images/red-like.svg" alt="" />
+                    </a>
+                </div>
+                <h4 class="ecllipse" th:text="${product.productName}">Product Name</h4>
+                <span class="prod-price">
+              From $<span th:text="${product.productPrice}">99</span>
+              <small th:text="${product.productPrice}">$199</small>
+            </span>
+                <div class="d-sm-flex align-items-center">
+                    <a th:href="@{${product.affiliateUrl}}" class="prod-price">Visit Store</a>
+                    <a th:href="@{${product.staticUrl}}" class="orange_text">More Info</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
