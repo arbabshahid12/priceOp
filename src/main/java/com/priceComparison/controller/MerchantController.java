@@ -59,10 +59,16 @@ package com.priceComparison.controller;
 import com.priceComparison.model.Merchant;
 import com.priceComparison.services.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.lang.annotation.Retention;
+import java.util.List;
 
 @Controller
 @RequestMapping("/merchant")
@@ -73,44 +79,38 @@ public class MerchantController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Render the registration page
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("merchant", new Merchant());
-        return "merchant-register"; // Thymeleaf template for registration
-    }
 
     // Process registration form
     @PostMapping("/register")
-    public String registerMerchant(@ModelAttribute("merchant") Merchant merchant, Model model) {
+    public String registerMerchant(@RequestBody Merchant merchant, Authentication authentication) {
         Merchant registeredMerchant = merchantService.registerMerchant(merchant);
-        model.addAttribute("message", "Merchant registered successfully!");
         return "merchant-login";  // Redirect to login page after registration
     }
-
-    // Render the login page
-    @GetMapping("/login")
-    public String showLoginForm(Model model) {
-        model.addAttribute("merchant", new Merchant());
-        System.out.println("Login form");
-
-        return "merchant-login"; // Thymeleaf template for login
+    @GetMapping("/merchants")
+    public ResponseEntity<List<Merchant>> getAllMerchants() {
+        List<Merchant> merchants = merchantService.getAllMerchants();
+        return ResponseEntity.ok(merchants);
     }
+
 
     // Process login form
     @PostMapping("/login")
-    public String login(@ModelAttribute("merchant") Merchant loginRequest, Model model) {
+    public String login(@RequestBody Merchant loginRequest) {
         Merchant foundMerchant = merchantService.findMerchantByEmail(loginRequest.getEmail());
 
-        System.out.println("email"+loginRequest.getEmail());
-        System.out.println("password"+loginRequest.getPassword());
+        System.out.println("email" + loginRequest.getEmail());
+        System.out.println("password" + loginRequest.getPassword());
 
         if (foundMerchant == null || !passwordEncoder.matches(loginRequest.getPassword(), foundMerchant.getPassword())) {
-            model.addAttribute("error", "Invalid email or password");
             return "merchant-login";
         }
-
-        model.addAttribute("message", "Login Successful!");
         return "merchant-dashboard";  // Redirect to merchant dashboard after successful login
     }
+
+    @PostMapping("addProductToMerchant/{id}")
+    public ResponseEntity<Merchant> addProductToMerchant(@PathVariable(value = "id") String merchantId, @RequestBody Long productId) {
+        return new ResponseEntity<>(merchantService.addProductToMerchant(merchantId, productId), HttpStatus.OK);
+    }
+
+
 }

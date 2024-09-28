@@ -11,14 +11,17 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String productId;
+    private Long productId;
     private String productName;
     private String productPrice;
+    private String name;
     private String brandName;
     private String merchantName;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private String category;
+    private String product;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "category_id")
+//    private Category category;
 
 }

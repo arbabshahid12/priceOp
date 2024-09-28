@@ -2,13 +2,9 @@ package com.priceComparison.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -30,6 +26,7 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
+        System.out.println("password ");
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -38,18 +35,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        System.out.println("CHeck auth");
         http.authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/").hasAnyAuthority( "MERCHANT", "ADMIN")
-                                .requestMatchers("/new").hasAnyAuthority("ADMIN", "MERCHANT")
-                                .requestMatchers("/update/").hasAnyAuthority("ADMIN", "MERCHANT")
-                                .requestMatchers("/delete/").hasAuthority("ADMIN")
+                                .requestMatchers("/").hasAnyAuthority( "MERCHANT", "ADMIN","USER")
+                                .requestMatchers("/CurrentLiveProduct/**").permitAll()
+                                .requestMatchers("mainProduct/**").permitAll()
+                                .requestMatchers("/merchant/**").permitAll()
+                                .requestMatchers("/product/**").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/merchant/login").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/USER/MERCHANT").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/loginSignup").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin.permitAll())

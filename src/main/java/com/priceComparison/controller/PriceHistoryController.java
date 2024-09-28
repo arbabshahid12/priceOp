@@ -3,7 +3,6 @@ package com.priceComparison.controller;
 import com.priceComparison.model.PriceHistory;
 import com.priceComparison.services.PriceHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

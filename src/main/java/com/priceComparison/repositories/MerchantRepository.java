@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MerchantRepository extends JpaRepository<Merchant, Long> {
+public interface MerchantRepository extends JpaRepository<Merchant, String> {
 
 //    Merchant findByEmail(String email);
 
@@ -15,4 +15,6 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
     Merchant getByUserName(@Param("username") String username);
 
     Merchant findByEmail(String email);
+
+   boolean existsByEmail(String email);
 }
