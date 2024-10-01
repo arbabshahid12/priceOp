@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Priceop</title>
+    <link rel="stylesheet" href="/fonts/font.css" />
+    <link
+            href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+            crossorigin="anonymous"
+    />
+    <link href="/css/style.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.slick/1.4.1/slick.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+<header class="header-sec">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="d-flex w-100 justify-content-between">
+                <a class="navbar-brand" href="/">
+                    <img src="/images/logo.svg" alt="Logo" />
+                </a>
+                <div class="d-flex d-lg-none">
+                    <ul class="navbar-nav flex-row">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="#">
+                                <i class="fa-regular fa-heart"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item login-btn me-2">
+                            <a class="nav-link" aria-current="page" href="/">
+                                <i class="fa-solid fa-arrow-right-to-bracket"></i> Log In
+                            </a>
+                        </li>
+                    </ul>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav m-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link " aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" th:href="@{/categories}">Categories</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/live_products">Live Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/main_products">Main Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/about-us">About us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/merchant_section">Merchant Section</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav me-0 mb-2 mb-lg-0 ms-auto d-none d-lg-flex">
+
+                        <li class="nav-item login-btn">
+                            <a class="nav-link" aria-current="page" href="/loginSignup">
+                                <i class="fa-solid fa-arrow-right-to-bracket"></i> Log In
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav me-0 mb-2 mb-lg-0 ms-auto d-none d-lg-flex">
+                        <li class="nav-item login-btn">
+                            <a class="nav-link" aria-current="page" href="/clogout">
+                                <!--                            <i class="fa-solid fa-arrow-left-from-bracket"></i> -->
+                                <!--                            Log Out-->
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<div class="banner-sec">
+    <div class="container">
+        <div class="bannerTxt">
+            <h1>Compare, Find Products with Priceop</h1>
+            <form class="bnr-srch" action="/search" method="get">
+                <input type="search" placeholder="Search by Product Name" name="query" th:value="${query}" />
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--&lt;!&ndash; Add Product Button &ndash;&gt;-->
+<!--<div class="container mt-3 text-end">-->
+<!--    <button id="addProductButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">-->
+<!--        Add Product-->
+<!--    </button>-->
+<!--</div>-->
+<!-- Add Product and CSV Upload Section -->
+<div class="container mt-3 d-flex justify-content-between align-items-center">
+
+    <!-- Single Upload CSV button -->
+    <div class="d-flex align-items-center">
+        <!--        <button id="uploadCsvButton" class="btn btn-success" onclick="triggerFileInput()">Upload CSV</button>-->
+        <!--        <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="uploadCSV()">-->
+
+        <button id="uploadCsvButton" class="btn btn-success" onclick="redirectToUploadPage()">Upload CSV</button>
+
+    </div>
+
+    <!-- Add Product Button -->
+    <!--    <button id="addProductButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">-->
+    <!--        Add Product-->
+    <!--    </button>-->
+    <button id="addProductButton" class="btn btn-primary" th:href="@{/add-product}" onclick="addProductBtn()">Add Product</button>
+
+</div>
+
+
+<!-- Product List -->
+<section class="top_prods">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row g-md-3 g-2">
+                    <!-- Loop through products -->
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-6" th:each="product : ${products}">
+                        <div class="prod-box mb-4">
+                            <div class="prod-img">
+                                <div class="img-holder">
+                                    <a th:href="@{/product-details/{id}(id=${product.id})}">
+                                        <img th:src="@{${product.productThumbUrl}}" alt="Product Image" />
+                                    </a>
+                                </div>
+                            </div>
+                            <h4 class="ecllipse" th:text="${product.productName}">Product Name</h4>
+                            <span class="prod-price">
+                                From $<span th:text="${product.productPrice}">99</span>
+                                <!--                                <small th:text="${product.productPrice}">199</small>-->
+                            </span>
+                            <!--                            <div class="d-sm-flex">-->
+                            <!--                                <a class="orange_text btn btn-warning me-2" th:href="@{/edit-product/{id}(id=${product.id})}">-->
+                            <!--                                    Edit-->
+                            <!--                                </a>-->
+                            <!--                                <a class="orange_text btn btn-danger me-2" th:href="@{/delete-product/{id}(id=${product.id})}">-->
+                            <!--                                    Delete-->
+                            <!--                                </a>-->
+                            <!--                            </div>-->
+                            <div class="d-sm-flex">
+                                <!--                                <a id="editButton" class="btn me-2" th:href="@{/edit-product/{id}(id=${product.id})}">-->
+                                <a class="btn btn-warning me-2" id="editButton" th:attr="data-id=${product.id}" onclick="openEditModal(this)">
+
+                                    Edit
+                                </a>
+                                <a id="deleteButton" class="btn me-2" th:href="@{/delete-product/{id}(id=${product.id})}">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End loop -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/add-product" method="post">
+                    <div class="row g-4">
+                        <!-- Left Column -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="productName" class="form-label">Product Name</label>
+                                <input type="text" class="form-control form-control-lg" id="productName" name="productName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productPrice" class="form-label">Product Price</label>
+                                <input type="number" class="form-control form-control-lg" id="productPrice" name="productPrice" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productThumbUrl" class="form-label">Product Image URL</label>
+                                <input type="url" class="form-control form-control-lg" id="productThumbUrl" name="productThumbUrl" >
+                            </div>
+                            <div class="mb-3">
+                                <label for="affiliateUrl" class="form-label">Affiliate URL</label>
+                                <input type="url" class="form-control form-control-lg" id="affiliateUrl" name="affiliateUrl">
+                            </div>
+                            <div class="mb-3">
+                                <label for="brandName" class="form-label">Brand Name</label>
+                                <input type="text" class="form-control form-control-lg" id="brandName" name="brandName">
+                            </div>
+                            <div class="mb-3 mt-4">
+                                <label for="category" class="form-label">Category Name</label>
+                                <select class="form-select form-select-lg" id="category" name="category">
+                                    <option value="" disabled selected>Select a category</option>
+                                    <!-- Thymeleaf to iterate over categories -->
+                                    <option th:each="category : ${categories}"
+                                            th:value="${category.name}"
+                                            th:text="${category.name}">Category Name</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 mt-4">
+                                <label for="category" class="form-label">Category Id</label>
+                                <select class="form-select form-select-lg" name="categoryId">
+                                    <option value="" disabled selected>Select a category</option>
+                                    <!-- Thymeleaf to iterate over categories -->
+                                    <option th:each="category : ${categories}"
+                                            th:value="${category.id}"
+                                            th:text="${category.name}">Category Id</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="condition" class="form-label">Condition</label>
+                                <!--                                <input type="text" class="form-control form-control-lg" id="condition" name="condition" required>-->
+                                <select class="form-select form-select-lg" id="condition" name="condition" required>
+                                    <option value="" disabled selected>Select condition</option>
+                                    <!-- Thymeleaf to iterate over categories -->
+                                    <option th:value="New" th:text="New">Option 1</option>
+                                    <option th:value="Used" th:text="Used">Option 2</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="merchantName" class="form-label">Merchant Email</label>
+                                <input type="text" class="form-control form-control-lg" id="merchantName" name="merchantEmail">
+                            </div>
+                        </div>
+                        <!-- Right Column -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="productImages" class="form-label">Product Images (Comma Separated URLs)</label>
+                                <input type="text" class="form-control form-control-lg" id="productImages" name="productImages" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productType" class="form-label">Product Type</label>
+                                <input type="text" class="form-control form-control-lg" id="productType" name="productType">
+                            </div>
+                            <div class="mb-3">
+                                <label for="affiliateNetwork" class="form-label">Affiliate Network</label>
+                                <input type="text" class="form-control form-control-lg" id="affiliateNetwork" name="affiliateNetwork">
+                            </div>
+                            <div class="mb-3">
+                                <label for="staticUrl" class="form-label">Static URL</label>
+                                <input type="url" class="form-control form-control-lg" id="staticUrl" name="staticUrl" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ean" class="form-label">EAN</label>
+                                <input type="text" class="form-control form-control-lg" id="ean" name="ean">
+                            </div>
+                            <div class="mb-3">
+                                <label for="mpn" class="form-label">MPN</label>
+                                <input type="text" class="form-control form-control-lg" id="mpn" name="mpn">
+                            </div>
+                            <div class="mb-3">
+                                <label for="isbn" class="form-label">ISBN</label>
+                                <input type="text" class="form-control form-control-lg" id="isbn" name="isbn">
+                            </div>
+                            <div class="mb-3">
+                                <label for="upc" class="form-label">UPC</label>
+                                <input type="text" class="form-control form-control-lg" id="upc" name="upc">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 mt-4">
+                        <label for="productDescription" class="form-label">Product Description</label>
+                        <textarea class="form-control form-control-lg" id="productDescription" name="productDescription" required></textarea>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Add Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">Add/Edit Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm" action="/add-product" method="post">
+                    <input type="hidden" id="product_Id" name="id"> <!-- Hidden input to hold product ID -->
+                    <div class="row g-4">
+                        <!-- Left Column -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="productName" class="form-label">Product Name</label>
+                                <input type="text" class="form-control form-control-lg" id="Name" name="productName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productPrice" class="form-label">Product Price</label>
+                                <input type="number" class="form-control form-control-lg" id="Price" name="productPrice" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productThumbUrl" class="form-label">Product Image URL</label>
+                                <input type="url" class="form-control form-control-lg" id="ThumbUrl" name="productThumbUrl" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="affiliateUrl" class="form-label">Affiliate URL</label>
+                                <input type="url" class="form-control form-control-lg" id="affUrl" name="affiliateUrl">
+                            </div>
+                            <div class="mb-3">
+                                <label for="brandName" class="form-label">Brand Name</label>
+                                <input type="text" class="form-control form-control-lg" id="brand" name="brandName">
+                            </div>
+                            <!--                            <div class="mb-3">-->
+                            <!--                                <label for="category" class="form-label">Category</label>-->
+                            <!--                                <input type="text" class="form-control form-control-lg" id="category" name="category">-->
+                            <!--                            </div>-->
+                            <div class="mb-3 mt-4">
+                                <label for="category" class="form-label">Category Name</label>
+                                <select class="form-select form-select-lg" id="cat" name="category">
+                                    <option value="" disabled selected>Select a category</option>
+                                    <!-- Thymeleaf to iterate over categories -->
+                                    <option th:each="category : ${categories}"
+                                            th:value="${category.name}"
+                                            th:text="${category.name}">Category Name</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 mt-4">
+                                <label for="category" class="form-label">Category Id</label>
+                                <select class="form-select form-select-lg" id="catId" name="categoryId">
+                                    <option value="" disabled selected>Select a category</option>
+                                    <!-- Thymeleaf to iterate over categories -->
+                                    <option th:each="category : ${categories}"
+                                            th:value="${category.id}"
+                                            th:text="${category.name}">Category Id</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="condition" class="form-label">Condition</label>
+                                <!--                                <input type="text" class="form-control form-control-lg" id="cond" name="condition">-->
+                                <select class="form-select form-select-lg" id="cond" name="condition" required>
+                                    <option value="" disabled selected>Select condition</option>
+                                    <!-- Thymeleaf to iterate over categories -->
+                                    <option th:value="New" th:text="New">Option 1</option>
+                                    <option th:value="Used" th:text="Used">Option 2</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="merchantName" class="form-label">Merchant Email</label>
+                                <input type="text" class="form-control form-control-lg" id="merchant1" name="merchantEmail">
+                            </div>
+                        </div>
+                        <!-- Right Column -->
+                        <div class="col-md-6">
+
+                            <div class="mb-3">
+                                <label for="productImages" class="form-label">Product Images (Comma Separated URLs)</label>
+                                <input type="text" class="form-control form-control-lg" id="Images" name="productImages">
+                            </div>
+                            <div class="mb-3">
+                                <label for="productType" class="form-label">Product Type</label>
+                                <input type="text" class="form-control form-control-lg" id="Type" name="productType">
+                            </div>
+                            <div class="mb-3">
+                                <label for="affiliateNetwork" class="form-label">Affiliate Network</label>
+                                <input type="text" class="form-control form-control-lg" id="affNetwork" name="affiliateNetwork">
+                            </div>
+                            <div class="mb-3">
+                                <label for="staticUrl" class="form-label">Static URL</label>
+                                <input type="url" class="form-control form-control-lg" id="statiUrl" name="staticUrl">
+                            </div>
+                            <div class="mb-3">
+                                <label for="ean" class="form-label">EAN</label>
+                                <input type="text" class="form-control form-control-lg" id="ean1" name="ean">
+                            </div>
+                            <div class="mb-3">
+                                <label for="mpn" class="form-label">MPN</label>
+                                <input type="text" class="form-control form-control-lg" id="mpn1" name="mpn">
+                            </div>
+                            <div class="mb-3">
+                                <label for="isbn" class="form-label">ISBN</label>
+                                <input type="text" class="form-control form-control-lg" id="isbn1" name="isbn">
+                            </div>
+                            <div class="mb-3">
+                                <label for="upc" class="form-label">UPC</label>
+                                <input type="text" class="form-control form-control-lg" id="upc1" name="upc">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 mt-4">
+                        <label for="productDescription" class="form-label">Product Description</label>
+                        <textarea class="form-control form-control-lg" id="productDes" name="productDescription"></textarea>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg" th:href="@{/update-product}">Save Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Custom CSS -->
+<style>
+    .modal-dialog {
+        max-width: 90%; /* Increase width of modal */
+    }
+
+    .form-control-lg {
+        height: calc(2.5rem + 2px); /* Increase height for larger inputs */
+    }
+
+    .row.g-4 > .col-md-6 {
+        padding: 0 1rem; /* Add padding for better spacing */
+    }
+
+    .modal-content {
+        padding: 2rem; /* Add padding inside modal for better spacing */
+    }
+</style>
+
+
+<section class="news_sec text-center">
+    <div class="container">
+
+        <h3 class="site-heading mb-2">Subscibe for Newsletter</h3>
+        <p>Keep up our latest news and offers. Subscibe our newsletter.</p>
+        <form class="bnr-srch">
+            <input type="search" placeholder="Search by Product Name">
+            <button type="submit"class="text-uppercase">
+                Subscribe <i class="fa-solid fa-arrow-right ms-2"></i>
+            </button>
+        </form>
+
+    </div>
+</section>
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="link_bx col-md-3 col-6">
+                <h3 class="site-heading">Need Help ?</h3>
+                <ul>
+                    <li><a href="#">About Priceop</a></li>
+                    <li><a href="#">Getting Started</a></li>
+                    <li><a href="#">Jobs</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">How to Use</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="link_bx col-md-3 col-6">
+                <h3 class="site-heading">Top Stores</h3>
+                <ul>
+                    <li><a href="#">Ted Baker UK</a></li>
+                    <li><a href="#">Raw Denim</a></li>
+                    <li><a href="#">Damart</a></li>
+                    <li><a href="#">Long Tall Sally</a></li>
+                    <li><a href="#">Fragrance Direct</a></li>
+                </ul>
+            </div>
+            <div class="link_bx col-md-3 col-6">
+                <h3 class="site-heading">Business</h3>
+                <ul>
+                    <li><a href="#">Flight Comparison</a></li>
+                    <li><a href="#">Product Comparison</a></li>
+                    <li><a href="#">Partners</a></li>
+                    <li><a href="#">Register a Shop</a></li>
+                    <li><a href="#">Affiliate Partner Programme</a></li>
+
+                </ul>
+            </div>
+            <div class="link_bx col-md-3 col-6">
+                <h3 class="site-heading">Follow us</h3>
+                <ul>
+                    <li><a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fa-brands fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fa-brands fa-tiktok"></i> TikTok</a></li>
+                    <li><a href="#"><i class="fa-brands fa-telegram"></i> Telegram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col2 d-md-flex align-items-center justify-content-between">
+
+            <div class="logo_sec d-md-flex align-items-center">
+                <div class="d-md-inline d-none">
+                    <a href="#"><img src="/images/logo.svg" alt="Priceop" style="max-width: 50px;"></a>
+                </div>
+                <a href="#">Home</a>
+                <a href="#">Comparison Product</a>
+                <a href="#">Shows</a>
+                <a href="#">Reviews</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="logo_sec d-flex align-items-center right_links">
+                <a href="#" title="Sell Tickets">Return Policy</a>
+                <a href="#" title="Support">Support</a>
+            </div>
+        </div>
+        <div class="col2 d-md-flex align-items-center justify-content-between copyrow">
+            <div class="logo_sec d-flex align-items-center">
+                <span>© 2024 Priceop. All rights reserved.</span>
+            </div>
+            <div class="logo_sec d-flex align-items-center right_links">
+                <a href="#" title="Terms of Service">Terms of Service</a>
+                <a href="#" title="Privacy Policy">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/jquery.slick/1.4.1/slick.min.js"></script>
+
+
+</body>
+</html>
+
+<!-- Your other scripts -->
+<script>
+    function openEditModal(button) {
+        // Get product ID from the button
+        const productId = $(button).attr("data-id");
+
+        // Make an AJAX call to fetch product details
+        $.ajax({
+            url: `/product/getById/${productId}`, // Endpoint to get the product details by ID
+            type: 'GET',
+            success: function (product) {
+                // Populate the form fields with the product data
+                console.log("success",product.id)
+
+                $('#product_Id').val(product.id);
+                $('#Name').val(product.productName);
+                $('#Price').val(product.productPrice);
+                $('#ThumbUrl').val(product.productThumbUrl);
+                $('#cat').val(product.category);
+                $('#catId').val(product.category.id);
+                $('#affUrl').val(product.affiliateUrl);
+                $('#brand').val(product.brandName);
+                $('#cond').val(product.condition);
+                $('#merchant1').val(product.merchantEmail);
+                $('#productDes').val(product.productDescription);
+                $('#Images').val(product.productImages);
+                $('#Type').val(product.productType);
+                $('#affNetwork').val(product.affiliateNetwork);
+                $('#statiUrl').val(product.staticUrl);
+                $('#ean1').val(product.ean);
+                $('#mpn1').val(product.mpn);
+                $('#isbn1').val(product.isbn);
+                $('#upc1').val(product.upc);
+
+                // Change form action to update-product URL
+                $('#productForm').attr('action', '/update-product');
+
+                // Change modal title for editing
+                $('#productModalLabel').text('Edit Product');
+
+                // Show the modal
+                $('#productModal').modal('show');
+            },
+            error: function () {
+                alert('Error fetching product details.');
+            }
+        });
+    }
+
+    function triggerFileInput() {
+        document.getElementById('csvFileInput').click(); // Trigger file selection dialog
+    }
+
+    function uploadCSV() {
+        const fileInput = document.getElementById('csvFileInput');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert("Please select a CSV file first!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file); // Append the CSV file to the form data
+
+        // Send the formData to your backend API
+        fetch('/tempProduct/import', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.headers.get('content-type')?.includes('application/json')) {
+                    return response.json();
+                } else {
+                    return response.text();  // If it's plain text, parse it as text
+                }
+            })
+            .then(data => {
+                if (typeof data === 'string') {
+                    alert(data);  // Handle plain text response
+                } else if (data.success) {
+                    alert("CSV uploaded successfully!");
+                    // window.location.href = "/FeedUploadSuccessPage.html";
+                } else {
+                    alert("Failed to upload CSV: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error uploading CSV:', error);
+                alert("Error uploading CSV!");
+            });
+    }
+    function redirectToUploadPage() {
+        location.href = '/uploadDatafeed';  // Redirects to the new upload page
+    }
+
+    function addProductBtn(){
+        location.href = '/add-product'
+    }
+</script>
+

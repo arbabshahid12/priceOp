@@ -41,8 +41,8 @@
             </span>
 
             <!-- Output the category.id and selectedCategoryId for debugging -->
-            <!--            <p>Category ID: <span th:text="${category.id}"></span></p>-->
-            <!--            <p>Selected Category ID: <span th:text="${selectedCategoryId}"></span></p>-->
+<!--            <p>Category ID: <span th:text="${category.id}"></span></p>-->
+<!--            <p>Selected Category ID: <span th:text="${selectedCategoryId}"></span></p>-->
 
             <!-- Highlight the selected category by comparing IDs -->
             <a th:href="@{/category/{id}(id=${category.id})}"
@@ -50,8 +50,8 @@
                th:classappend="${category.id == selectedCategoryId} ? 'selected-cat' : ''">
                 <!-- Apply CSS class if the category is selected -->
             </a>
-            <!--            <p th:text="${category.subcategories}"></p>-->
-            <!--            <p th:text="${selectedCategoryId}"></p>-->
+<!--            <p th:text="${category.subcategories}"></p>-->
+<!--            <p th:text="${selectedCategoryId}"></p>-->
 
             <!-- Check if there are subcategories -->
             <div th:if="${category.subcategories != null && !category.subcategories.isEmpty()}"

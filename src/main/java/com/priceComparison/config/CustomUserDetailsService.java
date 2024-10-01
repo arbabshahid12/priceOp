@@ -26,7 +26,6 @@ public class  CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private MerchantRepository merchantRepository;
 
-    //    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     @Autowired
     private UserRepository userRepository;
 

@@ -4,19 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Priceop</title>
-    <link rel="stylesheet" href="fonts/font.css" />
+    <link rel="stylesheet" href="/fonts/font.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"
       rel="stylesheet"
     />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link
+    <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
-    <link href="css/style.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+
   </head>
   <body>
   <header class="header-sec">
@@ -54,7 +55,7 @@
                               <a class="nav-link " aria-current="page" href="/">Home</a>
                           </li>
                           <li class="nav-item">
-                              <a class="nav-link active" aria-current="page" th:href="@{/categories}">Categories</a>
+                              <a class="nav-link" aria-current="page" th:href="@{/categories}">Categories</a>
                           </li>
                           <li class="nav-item">
                               <a class="nav-link" aria-current="page" href="/live_products">Live Products</a>
@@ -83,125 +84,83 @@
       </div>
   </header>
 
-        <div class="banner-sec">
-            <div class="container">
-                <div class="bannerTxt">
-                    <h1>Compare, Find Products with Priceop</h1>
-                    <form class="bnr-srch" action="/search" method="get">
-                        <input type="search" placeholder="Search by Product Name" name="query" th:value="${query}"/>
-                        <button type="submit">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                    </form>
-                </div>
+
+    <div class="banner-sec">
+        <div class="container">
+            <div class="bannerTxt">
+                <h1>Compare, Find Products with Priceop</h1>
+                <form class="bnr-srch" action="/search" method="get">
+                    <input type="search" placeholder="Search by Product Name" name="query" th:value="${query}" />
+                    <button type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
             </div>
-        </div>
-
-
-
-
-    <div class="container plain about-shops pt-5 mb-4">
-		<h2 class="site-heading mb-3">Browse by Category</h2>
-        <div class="container mt-3 text-end">
-        <button id="addCategoryButton" class="btn btn-primary text-center" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
-            Create Category
-        </button>
         </div>
     </div>
 
-<!--	<section class="cate_sec py-5">-->
-<!--		<div class="container">-->
-<!--			<div class="row g-lg-3 g-2">-->
-<!--				<th:block th:each="category : ${categories}">-->
-<!--					<div class="col-md-4 col-lg-3 col-6">-->
-<!--					<div class="group">-->
-<!--						<h2 class="sub-heading"><a th:href="@{/category/{id}(id=${category.id})}" th:text="${category.name}"></a></h2>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--				</th:block>>-->
-<!--			</div>-->
-<!--		</div>-->
-<!--	</section>-->
 
-  <section class="cate_sec py-5">
-      <div class="container">
-          <div class="row g-lg-3 g-2">
-              <!-- Loop through main categories -->
-              <th:block th:each="mainCategory : ${mainCategories}">
-                  <div class="col-lg-3 col-md-4 col-sm-6">
-                      <!-- Main Category Heading (Bold and Clickable) -->
-                      <h2 class="group sub-heading">
-                          <a th:href="@{/category/{id}(id=${mainCategory.id})}"
-                             th:text="${mainCategory.name}"></a>
-                      </h2>
+  <section class="category_product_section py-5">
+<!--      <div class="">-->
+          <div class="row">
+              <!-- Left Column: Categories -->
+              <div class="col-lg-4 col-md-4" style="padding-left: 25px">
 
-                      <!-- Subcategories Section -->
-                      <div class="sub-categories ">
-                          <ul class="list-unstyled ">
-                              <!-- Loop through subcategories and limit display to first 5 -->
-                              <th:block th:each="subCategory, iterStat : ${subcategoriesMap[mainCategory.id]}">
-                                  <th:block th:if="${iterStat.index < 5}">
-                                      <li class="small-text">
-                                          <a th:href="@{/category/{id}(id=${subCategory.id})}"
-                                             th:text="${subCategory.name}"></a>
-                                      </li>
-                                  </th:block>
-                              </th:block>
-                          </ul>
+                      <h1 th:text="${category.name}">Categories</h1>
+                      <!-- Display hierarchical categories -->
+                      <div th:replace="~{category-fragment :: categoryList(categories=${categories}, level=0, selectedCategoryId=${category.id})}"></div>
+              </div>
 
-                          <!-- View More button if there are more than 5 subcategories -->
-                          <th:block th:if="${subcategoriesMap[mainCategory.id]?.size() > 5}">
-                              <a th:href="@{/category/{id}(id=${mainCategory.id})}" class="btn btn-sm mt-0">View More</a>
-                          </th:block>
+              <!-- Right Column: Products -->
+              <div class="col-lg-6 col-md-8">
+                  <section class="top_prods">
+                      <div class="container">
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="d-flex justify-content-between align-items-center mb-3">
+                                      <!-- Heading for Products -->
+                                      <h2 class="site-heading" >Products</h2>
+                                  </div>
+
+                                  <!-- Check if products are available -->
+                                  <div th:if="${products.size() > 0}">
+                                      <div class="row g-md-3 g-2">
+                                          <div class="col-lg-4 col-md-6 col-sm-6 col-6" th:each="product : ${products}">
+                                              <div class="prod-box mb-4">
+                                                  <div class="prod-img">
+                                                      <div class="img-holder">
+                                                          <a th:href="@{/product-details/{id}(id=${product.id})}">
+                                                              <img th:src="@{${product.productThumbUrl}}" alt="Product Image" />
+                                                          </a>
+                                                      </div>
+                                                  </div>
+                                                  <h4 class="ecllipse" th:text="${product.productName}">Product Name</h4>
+                                                  <span class="prod-price">From $<span th:text="${product.productPrice}">99</span></span>
+                                                  <div class="d-sm-flex">
+                                                      <a class="prod-price" th:href="@{${product.affiliateUrl}}">Visit Store</a>
+                                                      <a class="orange_text" th:href="@{/product-details/{id}(id=${product.id})}">More Info</a>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <!-- Fallback message if no products are available -->
+                                  <div th:unless="${products.size() > 0}">
+                                      <p class="text-center">No products available.</p>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
-                  </div>
-              </th:block>
+                  </section>
+              </div>
           </div>
-      </div>
+<!--      </div>-->
   </section>
 
 
 
-
-
-  <!-- Modal for creating a new category -->
-  <div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="createCategoryModalLabel">Create New Category</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <form action="/add-category" method="post" id="createCategoryForm">
-                      <div class="mb-3">
-                          <label for="categoryName" class="form-label">Category Name</label>
-                          <input type="text" class="form-control" id="categoryName" name="name" required />
-                      </div>
-                      <div class="mb-3">
-                          <label for="categoryImage" class="form-label">Category Image URL</label>
-                          <input type="text" class="form-control" id="categoryImage" name="imagePathUrl"/>
-                      </div>
-                      <div class="mb-3 mt-4">
-                          <label for="category" class="form-label">Parent Category</label>
-                          <select class="form-select form-select-lg" id="category" name="parentCategoryId">
-                              <option value="" disabled selected>Select a Parent Category</option>
-                              <!-- Thymeleaf to iterate over categories -->
-                              <option value="null">None</option>
-                              <option th:each="category : ${categories}"
-                                      th:value="${category.id}"
-                                      th:text="${category.name}">Category Name</option>
-                          </select>
-                      </div>
-                      <button type="submit" class="btn btn-primary">Create Category</button>
-                  </form>
-              </div>
-          </div>
-      </div>
-  </div>
-
-
-	<section class="news_sec text-center">
+  <section class="news_sec text-center">
 		<div class="container">
 			
 			<h3 class="site-heading mb-2">Subscibe for Newsletter</h3> 
@@ -265,7 +224,7 @@
 		
           <div class="logo_sec d-md-flex align-items-center">
 		  <div class="d-md-inline d-none">
-              <a href="#"><img src="images/logo.svg" alt="Priceop" style="max-width: 50px;"></a>
+              <a href="#"><img src="/images/logo.svg" alt="Priceop" style="max-width: 50px;"></a>
             </div>
             <a href="#">Home</a>
             <a href="#">Comparison Product</a>
@@ -294,79 +253,25 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/jquery.slick/1.4.1/slick.min.js"></script>
 
-  <style>
-      .bold-text {
-          font-weight: bold;
-          font-size: 1.25rem;
-          color: #333;
+      <script>
 
-      }
-
-      .small-text {
-          font-size: 0.95rem;
-          font-weight: normal;
-          color: #666;
-          margin-bottom: 5px;
-      }
-
-      .sub-categories ul {
-          padding-left: 0;
-          list-style: none;
-      }
-
-      .sub-categories li {
-          margin-bottom: 5px;
-      }
-
-  </style>
+          function toggleSubcategories(event) {
+              // console.log(event.currentTarget.nextElementSibling.nextElementSibling)
+              const subcategoryList = event.currentTarget.nextElementSibling.nextElementSibling;
+              if (subcategoryList.style.display === 'none' || !subcategoryList.style.display) {
+                  console.log(subcategoryList)
+                  subcategoryList.style.display = 'block'; // Show subcategories
+                  event.currentTarget.textContent = '−'; // Change icon to minus
+              } else {
+                  subcategoryList.style.display = 'none'; // Hide subcategories
+                  event.currentTarget.textContent = '+'; // Change icon to plus
+              }
+          }
 
 
 
-  <script>
-      $(document).ready(function () {
-	  
-		
-		
-        $(".slick-slider").slick({
-          slidesToShow: 6,
-          slidesToScroll: 1,
-          arrows: true,
-          dots: false,
-          speed: 300,
-          infinite: false,
-          autoplaySpeed: 5000,
-          autoplay: false,
-          responsive: [
-            {
-              breakpoint: 991,
-              settings: {
-                slidesToShow: 3,
-              },
-            },
-            {
-              breakpoint: 767,
-              settings: {
-                slidesToShow: 2,
-              },
-            },
-			{
-              breakpoint: 390,
-              settings: {
-                slidesToShow: 1,
-              },
-            },
-          ],
-        });
-		
-		
-		
+      </script>
 
-        
-      });
-	  
-	  
 
-	  
-    </script>
   </body>
 </html>

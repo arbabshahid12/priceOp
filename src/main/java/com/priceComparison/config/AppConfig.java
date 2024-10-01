@@ -27,7 +27,6 @@ public class AppConfig {
                         .name("Admin")
                         .build();
 
-                // Save to MongoDB
                 superUserRepository.save(defaultSuperUser);
             }
         };

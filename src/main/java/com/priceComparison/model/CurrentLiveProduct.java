@@ -1,18 +1,4 @@
 package com.priceComparison.model;
-//
-//import jakarta.persistence.*;
-//import lombok.Data;
-//
-//@Table(name = "live_productss")
-//@Data
-//@Entity
-//public class CurrentLiveProduct {
-//    @Id
-//    @GeneratedValue (strategy = GenerationType.IDENTITY)
-//    private String id;
-//    private boolean isLive;
-//    private Product products;
-//}
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,6 +13,15 @@ public class CurrentLiveProduct {
     private String id;
     private boolean isLive;
 
-    private Long productId;
+    @ManyToOne // or other appropriate relationship annotation
+    @JoinColumn(name = "product_id")
+    private Product product;
 
+    public CurrentLiveProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 }

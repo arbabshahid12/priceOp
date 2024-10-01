@@ -18,7 +18,19 @@ public class Product {
     private String brandName;
     private String merchantName;
     private String category;
-    private String product;
+    private String productType;
+
+    public Product(Long id, Long productId, String productName, String productPrice, String name, String brandName, String merchantName, String category, String product) {
+        this.id = id;
+        this.productId = productId;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.name = name;
+        this.brandName = brandName;
+        this.merchantName = merchantName;
+        this.category = category;
+        this.productType = product;
+    }
 //
 //    @ManyToOne
 //    @JoinColumn(name = "category_id")

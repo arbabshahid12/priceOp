@@ -54,7 +54,7 @@ public class ProductPageController {
     @Autowired
     private TokenRepository verificationTokenRepository;
     @Autowired
-    private Email emailService;
+    private EmailService emailService;
     @Autowired
     private SuperUserRepository superUserRepository;
     @Autowired
@@ -117,7 +117,6 @@ public class ProductPageController {
 
     @GetMapping("/product-details/{id}")
     public String showProductDetails(@PathVariable("id") Long id, Model model) throws JsonProcessingException {
-        // Fetch the product by ID
         Product product = productService.getProductById(id);
         System.out.println(product);
 
@@ -129,14 +128,9 @@ public class ProductPageController {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule()); // Register the JavaTimeModule for proper date serialization
 
-        // Ensure dates are serialized as strings in ISO 8601 format
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
-        // Convert the list of price histories to a JSON string
         String priceHistoryJson = mapper.writeValueAsString(priceHistory);
         System.out.println(priceHistoryJson);
-
-// Initialize variables to track the lowest prices
         String lowestPriceEver = null;
         String lowestPriceToday = null;
         LocalDateTime lowestPriceEverDate = null;
@@ -246,8 +240,6 @@ public class ProductPageController {
     public String signUp(Model model, Authentication authentication) {
         authentication = securityContextHolder.getContext().getAuthentication();
         System.out.println(authentication);
-
-
         WebAuthenticationDetails webAuthenticationDetails = (WebAuthenticationDetails) authentication.getDetails();
         System.out.println(webAuthenticationDetails.getSessionId());
         if (authentication != null && authentication.isAuthenticated() && webAuthenticationDetails.getSessionId() != null) {
@@ -255,27 +247,21 @@ public class ProductPageController {
             System.out.println("in");
             return "redirect:/merchant_section";  // Redirect if already authenticated
         }
-
         model.addAttribute("merchant", new Merchant());
-
-
         return "login_signup";
     }
+
 
     @PostMapping("/register")
     public String registerMerchant(@ModelAttribute Merchant merchant, Model model, RedirectAttributes redirectAttributes) {
         if (merchantService.isEmailRegistered(merchant.getEmail())) {
             System.out.println(merchantService.isEmailRegistered(merchant.getEmail()));
-//            model.addAttribute("errorMessage", "Email is already registered.");
             System.out.println("Email is already registered.");
-//            redirectAttributes.addFlashAttribute("errorMessage", "Email is already registered.");
             model.addAttribute("errorMessage", "Email is already registered.");
 
             return "login_signup";
         }
         SuperUser superUser = superUserService.getAllUsers().get(0);
-
-
         String superusername = superUser.getEmail();
         Users user = Users.builder()
                 .email(merchant.getEmail())
@@ -283,8 +269,6 @@ public class ProductPageController {
                 .password(merchant.getPassword())
                 .build();
         Users user1 = userService.createNewUser(user);
-
-        // Generate a verification token
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
@@ -292,8 +276,6 @@ public class ProductPageController {
         verificationToken.setExpiryDate(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)); // 24 hours expiry
 
         verificationTokenRepository.save(verificationToken);
-
-        // Send verification email
         emailService.sendVerificationEmail(merchant.getEmail(), token);
      model.addAttribute("successMessage", "Verification email sent to " + merchant.getEmail());
 
@@ -367,14 +349,13 @@ public class ProductPageController {
 
     @GetMapping("/merchant_section")
     public String merchantDashboard(Model model) {
-
         List<Product> products = productService.getAll();
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("products", products);
         model.addAttribute("categories", categories);
         System.out.println("size: " + products.size());
 //        System.out.println(products);
-        if (products == null || products.isEmpty()) {
+        if (products.isEmpty()) {
             return "EmptyPage"; // Render a different page if there are no products
         }
         return "merchant_dashboard";

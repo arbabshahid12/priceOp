@@ -17,7 +17,7 @@ public class CurrentLiveProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public String changeLiveStatus(Long id){
+    public String changeLiveStatus(String id){
         CurrentLiveProduct currentLiveProduct = currentLiveProductRepo.findById(id)
                 .orElseThrow(()->new RuntimeException("Current live product not found"));
 

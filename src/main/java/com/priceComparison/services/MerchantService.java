@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class MerchantService {
@@ -28,27 +29,37 @@ public class MerchantService {
 
     @Autowired
     private ProductService productService;
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
 
     public List<Merchant> getAllMerchants() {
         return merchantRepository.findAll();
     }
 
-    public Merchant registerMerchant(Merchant merchant) {
-        Merchant emialExit = merchantRepository.findByEmail(merchant.getEmail());
-        System.out.println("mail exsit : " + emialExit);
+    public Merchant registerMerchant(Merchant merchant, String superuserId) {
+        validateMerchantData(merchant);
 
-        if (emialExit == null) {
-            merchant.setPassword(passwordEncoder.encode(merchant.getPassword()));
-            merchant.setEmail(merchant.getEmail());
-            merchant = merchantRepository.save(merchant);
-//            merchant.setMessage("Create Account Successfully");
-//            merchant.setCode("200");
-            return merchant;
+        if (merchantRepository.existsByEmail(merchant.getEmail())) {
+            throw new RuntimeException("Email already in use");
         }
-//        merchant.setMessage("Email already exist");
-//        merchant.setCode("01");
-        return merchant;
+
+        // Validate product IDs
+        if (merchant.getProductIds() != null && merchant.getProductIds().length > 0) {
+            for (Long productId : merchant.getProductIds()) {
+                boolean productExists = productRepository.existsById(productId);
+                if (!productExists) {
+                    throw new RuntimeException("Product with ID '" + productId + "' does not exist or is not available");
+                }
+            }
+        }
+        merchant.setSuperUserId(superuserId);
+
+        // Hash the password before saving
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(merchant.getPassword());
+        merchant.setPassword(hashedPassword);
+        return merchantRepository.save(merchant);
     }
+
 
     public String loginMerchant(Merchant merchant) {
         System.out.println("merchant: " + merchant);
@@ -75,8 +86,6 @@ public class MerchantService {
 
 
         System.out.println("login success");
-
-        // You can return a token or a success message here
         return "Login successful";
     }
 
@@ -111,14 +120,29 @@ public class MerchantService {
             productIds.add(productId);
             merchant.setProductIds(productIds.toArray(new Long[0]));
         }
-
-
         // Save the updated category
         return merchantRepository.save(merchant);
+    }
+    public String deleteMerchant(String id){
+        merchantRepository.deleteById(id);
+        return "deleted";
     }
 
     public List<Merchant> getAll() {
         List<Merchant> merchants = merchantRepository.findAll();
         return merchants;
+    }
+    private void validateMerchantData(Merchant merchant) {
+        if (merchant.getEmail() == null || !Pattern.matches(EMAIL_REGEX, merchant.getEmail())) {
+            throw new RuntimeException("Invalid email format");
+        }
+
+        if (merchant.getPassword() == null || merchant.getPassword().length() < 6) {
+            throw new RuntimeException("Password must be at least 6 characters long");
+        }
+
+        if (merchant.getName() == null || merchant.getName().trim().isEmpty()) {
+            throw new RuntimeException("Name cannot be empty");
+        }
     }
 }

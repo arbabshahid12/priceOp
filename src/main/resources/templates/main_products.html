@@ -17,15 +17,6 @@
             crossorigin="anonymous"
     />
     <link href="/css/style.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.slick/1.4.1/slick.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
-
-
 </head>
 <body>
 <header class="header-sec">
@@ -69,13 +60,13 @@
                             <a class="nav-link" aria-current="page" href="/live_products">Live Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="/main_products">Main Products</a>
+                            <a class="nav-link active" aria-current="page" href="/main_products">Main Products</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="/about-us">About us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/merchant_section">Merchant Section</a>
+                            <a class="nav-link" aria-current="page" href="/merchant_section">Merchant Section</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav me-0 mb-2 mb-lg-0 ms-auto d-none d-lg-flex">
@@ -91,21 +82,63 @@
         </nav>
     </div>
 </header>
-<hr>
-<hr>
-<div class="container">
-    <h2 class="mt-5">Upload Datafeed CSV</h2>
-    <div class="d-flex align-items-center mt-4">
-        <!--        <input type="file" id="csvFileInput" accept=".csv" class="form-control-file" onchange="uploadCSV()">-->
-        <!--        <button class="btn btn-primary ml-3" onclick="triggerFileInput()">Upload CSV</button>-->
 
 
-        <button id="uploadCsvButton" class="btn btn-success" onclick="triggerFileInput()">Upload CSV</button>
-        <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="uploadCSV()">
+<div class="banner-sec">
+    <div class="container">
+        <div class="bannerTxt">
+            <h1>Compare, Find Products with Priceop</h1>
+            <form class="bnr-srch" action="/search" method="get">
+                <input type="search" placeholder="Search by Product Name" name="query" th:value="${query}" />
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
     </div>
 </div>
-<hr/>
-<hr/>
+
+<section class="top_prods">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="site-heading" >Live Products</h2>
+                </div>
+                <div class="row g-md-3 g-2">
+                    <!-- Loop through products -->
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-6" th:each="product : ${products}">
+                        <div class="prod-box mb-4" th:if="${products.size() > 0}">
+                            <div class="prod-img">
+                                <div class="img-holder">
+                                    <a th:href="@{/product-details/{id}(id=${product.product.id})}">
+                                        <img th:src="@{${product.product.productThumbUrl}}" alt="" />
+                                    </a>
+                                </div>
+                            </div>
+                            <h4 class="ecllipse" th:text="${product.product.productName}">Product Name</h4>
+                            <span class="prod-price">From $<span th:text="${product.product.productPrice}">99</span>
+<!--                                    <small th:text="${product.product.productPrice}">199</small>-->
+                                </span>
+                            <div class="d-sm-flex">
+                                <a class="prod-price" th:href="@{${product.product.affiliateUrl}}">Visit Store</a>
+                                <a class="orange_text" th:href="@{/product-details/{id}(id=${product.product.id})}">More Info</a>
+                            </div>
+                        </div>
+                        <div th:unless="${products.size() > 0}">
+                            <p class="text-center">No products available.</p>
+                        </div>
+                    </div>
+                    <!-- End loop -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
 <section class="news_sec text-center">
     <div class="container">
 
@@ -195,54 +228,9 @@
     </div>
 </footer>
 
+<script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/jquery.slick/1.4.1/slick.min.js"></script>
+
 </body>
-<script>
-    function triggerFileInput() {
-        document.getElementById('csvFileInput').click();  // Simulate click on file input
-    }
-
-    function uploadCSV() {
-        const fileInput = document.getElementById('csvFileInput');
-        const file = fileInput.files[0];
-
-        if (!file) {
-            alert("Please select a CSV file first!");
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', file);
-
-        fetch('/tempProduct/import', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                if (response.headers.get('content-type')?.includes('application/json')) {
-                    console.log("json")
-                    location.href = '/success-page'
-                    return response.json();
-                } else {
-                    console.log("txt")
-                    location.href = '/success-page'
-                    return response.text();
-                }
-            })
-            .then(data => {
-                if (typeof data === 'string') {
-                    alert(data);
-                } else if (data.success) {
-                    alert("CSV uploaded successfully!");
-                    // location.href = '/upload';  // Redirects to the new upload page
-                } else {
-                    alert("Failed to upload CSV: " + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error uploading CSV:', error);
-                alert("Error uploading CSV!");
-            });
-    }
-</script>
-
 </html>

@@ -60,34 +60,36 @@ import com.priceComparison.model.Merchant;
 import com.priceComparison.services.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.annotation.Retention;
 import java.util.List;
 
 @Controller
-@RequestMapping("/merchant")
+@RequestMapping("/merchants")
 public class MerchantController {
     @Autowired
     private MerchantService merchantService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
 
-    // Process registration form
     @PostMapping("/register")
-    public String registerMerchant(@RequestBody Merchant merchant, Authentication authentication) {
-        Merchant registeredMerchant = merchantService.registerMerchant(merchant);
-        return "merchant-login";  // Redirect to login page after registration
+    @PreAuthorize("hasRole('SUPERUSER')")
+    public ResponseEntity<Merchant> registerMerchant(@RequestBody Merchant merchant, Authentication authentication) {
+        String superUserId = ((User) authentication.getPrincipal()).getUsername();
+        Merchant registeredMerchant = merchantService.registerMerchant(merchant, superUserId);
+        return new ResponseEntity<>(registeredMerchant, HttpStatus.CREATED);
     }
-    @GetMapping("/merchants")
-    public ResponseEntity<List<Merchant>> getAllMerchants() {
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Merchant>> getAll() {
         List<Merchant> merchants = merchantService.getAllMerchants();
         return ResponseEntity.ok(merchants);
     }
@@ -95,21 +97,19 @@ public class MerchantController {
 
     // Process login form
     @PostMapping("/login")
-    public String login(@RequestBody Merchant loginRequest) {
-        Merchant foundMerchant = merchantService.findMerchantByEmail(loginRequest.getEmail());
-
-        System.out.println("email" + loginRequest.getEmail());
-        System.out.println("password" + loginRequest.getPassword());
-
-        if (foundMerchant == null || !passwordEncoder.matches(loginRequest.getPassword(), foundMerchant.getPassword())) {
-            return "merchant-login";
-        }
-        return "merchant-dashboard";  // Redirect to merchant dashboard after successful login
+    public ResponseEntity<String> loginMerchant(@RequestBody Merchant merchant) {
+        String res = merchantService.loginMerchant(merchant);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PostMapping("addProductToMerchant/{id}")
     public ResponseEntity<Merchant> addProductToMerchant(@PathVariable(value = "id") String merchantId, @RequestBody Long productId) {
         return new ResponseEntity<>(merchantService.addProductToMerchant(merchantId, productId), HttpStatus.OK);
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable(value = "id") String id){
+
+        return new ResponseEntity<>(merchantService.deleteMerchant(id), HttpStatus.OK);
     }
 
 

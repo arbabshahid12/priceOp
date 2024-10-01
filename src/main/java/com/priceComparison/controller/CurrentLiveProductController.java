@@ -11,13 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/CurrentLiveProduct")
-public class CurrentLiveProductController {
+public class    CurrentLiveProductController {
 
     @Autowired
     private CurrentLiveProductService currentLiveProductService;
 
     @PutMapping("/changeLiveStatus/{id}")
-    public ResponseEntity<String> changeStatus(@PathVariable(value = "id") Long id){
+    public ResponseEntity<String> changeStatus(@PathVariable(value = "id") String id){
         String res = currentLiveProductService.changeLiveStatus(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
